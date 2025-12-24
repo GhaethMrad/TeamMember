@@ -44,7 +44,7 @@
             </table>
         </div>
     </div>
-    @if (session('status') === 'done')
+    @if (session('status') == 'done')
     <script>
         Swal.fire({
             title: 'Successfully',
