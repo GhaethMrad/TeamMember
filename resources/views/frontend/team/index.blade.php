@@ -5,7 +5,9 @@
 @section('content')
     <div class="container">
         <h1 class="w-fit mx-auto my-[50px] text-[#222] text-[50px] uppercase border-b-2 border-indigo-400">Teams</h1>
-        <a href="{{ route('team.create') }}" class="block w-fit mx-auto mb-[20px] px-[25px] py-[10px] bg-[#222] text-indigo-400 border-2 border-indigo-400 text-[20px] uppercase">Create</a>
+        @can ('create', App\Models\Team::class)
+            <a href="{{ route('team.create') }}" class="block w-fit mx-auto mb-[20px] px-[25px] py-[10px] bg-[#222] text-indigo-400 border-2 border-indigo-400 text-[20px] uppercase">Create</a>
+        @endcan
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead>
@@ -26,15 +28,31 @@
                             <td class="text-center bg-[#333] p-[8px] text-[20px] text-white border-2 border-gray-300">
                                 <div class="flex items-center gap-1">
                                     <a href="{{ route('team.show', $team->id) }}" class="border-b-2 border-indigo-400 text-indigo-400">Show</a>
-                                    @if (Auth::user()->isAdmin())
-                                        <a href="{{ route('team.create') }}" class="border-b-2 border-green-400 text-green-400">Create</a>
+                                    @can ('update', $team)                                        
                                         <a href="{{ route('team.edit', $team->id) }}" class="border-b-2 border-blue-500 text-blue-500">Edit</a>
+                                    @endcan
+                                        @can('delete', $team)
                                         <form action="{{ route('team.destroy', $team->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <input class="border-b-2 border-red-500 text-red-500 cursor-pointer" type="submit" value="Delete">
                                         </form>
-                                    @endif
+                                        @endcan
+
+                                        @if (!Auth::user()->team_id)
+                                            <form action="{{ route('team.join_user', ['team' => $team->id, 'user' => Auth::user()->id]) }}" method="POST">
+                                                @csrf
+                                                @method('PUT')
+                                                <input class="text-green-400" type="submit" value="Join">
+                                            </form>
+                                        @elseIf (Auth::user()->team_id == $team->id)
+                                            <form action="{{ route('team.leave_user', Auth::user()->id) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <input class="text-red-400 underline cursor-pointer" type="submit" value="Leave">
+                                            </form>
+                                        @endif
+
                                 </div>
                             </td>
                         </tr>

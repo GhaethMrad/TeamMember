@@ -4,6 +4,10 @@
 
 @section('content')
     <div class="container">
+        <a class="block mt-[20px] text-indigo-400" href="{{ route('team.index') }}">
+            <i class="fa-solid fa-arrow-left"></i>
+            Home
+        </a>
         <h1 class="w-fit mx-auto my-[50px] text-[#222] text-[50px] uppercase border-b-2 border-indigo-400 text-center">({{ $team->name }}) Teams Details</h1>
         <div class="overflow-x-auto">
             <table class="w-full">

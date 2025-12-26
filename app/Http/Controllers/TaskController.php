@@ -3,16 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $this->authorize('viewAny', Task::class);
+        return view('frontend.task.index', ['tasks' => Auth::user()->tasks()]);
     }
 
     /**
@@ -20,7 +25,8 @@ class TaskController extends Controller
      */
     public function create()
     {
-        //
+        $this->authorize('create', Task::class);
+        return view('frontend.task.create', ['users' => User::whereNotNull('team_id')->get()]);
     }
 
     /**
