@@ -37,7 +37,7 @@ class TaskPolicy
      */
     public function update(User $user, Task $task): bool
     {
-        return $user->id == $task->user_id;
+        return $user->isAdmin();
     }
 
     /**
@@ -62,5 +62,10 @@ class TaskPolicy
     public function forceDelete(User $user, Task $task): bool
     {
         return false;
+    }
+
+    public function changeStatus(User $user, Task $task): bool
+    {
+        return $user->id == $task->user_id;
     }
 }

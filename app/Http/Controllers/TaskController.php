@@ -86,4 +86,18 @@ class TaskController extends Controller
     {
         //
     }
+
+    public function changeStatus(Request $request, Task $task)
+    {
+        try {
+            $this->authorize('changeStatus', $task);
+
+            $task->status = $request->status;
+            $task->save();
+
+            return redirect()->route('task.index')->with('status', 'done');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'An error occurred while updating the task status.');
+        }
+    }
 }

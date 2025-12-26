@@ -19,6 +19,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/team/{team}/join/{user}', [TeamController::class, 'join_user'])->name('team.join_user');
     Route::delete('/team/user/{id}/leave', [TeamController::class, 'leave_user'])->name('team.leave_user');
     Route::resource('task', TaskController::class);
+    Route::put('/task/{task}/status', [TaskController::class, 'changeStatus'])->name('task.change_status');
 });
 
 require __DIR__.'/auth.php';
