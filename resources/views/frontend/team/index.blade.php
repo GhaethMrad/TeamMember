@@ -39,18 +39,22 @@
                                         </form>
                                         @endcan
 
-                                        @if (!Auth::user()->team_id)
+                                        @if (!Auth::user()->team_id && !Auth::user()->is_admin)
+                                            @can('join', [$team, Auth::user()])
                                             <form action="{{ route('team.join_user', ['team' => $team->id, 'user' => Auth::user()->id]) }}" method="POST">
                                                 @csrf
                                                 @method('PUT')
                                                 <input class="text-green-400" type="submit" value="Join">
                                             </form>
-                                        @elseIf (Auth::user()->team_id == $team->id)
+                                            @endcan
+                                        @elseIf (Auth::user()->team_id == $team->id && !Auth::user()->is_admin)
+                                            @can('leave', [$team, Auth::user()])
                                             <form action="{{ route('team.leave_user', Auth::user()->id) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
                                                 <input class="text-red-400 underline cursor-pointer" type="submit" value="Leave">
                                             </form>
+                                            @endcan
                                         @endif
 
                                 </div>
@@ -68,6 +72,15 @@
             title: 'Successfully',
             text: 'The operation was completed successfully',
             icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    </script>
+    @elseif (session('error'))
+    <script>
+        Swal.fire({
+            title: 'Error',
+            text: '{{ session('error') }}',
+            icon: 'error',
             confirmButtonText: 'OK'
         });
     </script>

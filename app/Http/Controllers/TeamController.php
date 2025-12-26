@@ -8,6 +8,7 @@ use App\Models\Team;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Routing\Controller;
 
 class TeamController extends Controller
@@ -100,27 +101,42 @@ class TeamController extends Controller
      */
     public function destroy(Team $team)
     {
-        $this->authorize('delete', $team);
-        $team->delete();
-        return redirect()->route('team.index')->with('status', 'done');
+        try {
+            $this->authorize('delete', $team);
+            $team->delete();
+            return redirect()->route('team.index')->with('status', 'done');
+        } catch (Exception $error) {
+            return redirect()->route('team.index')->with('error', $error->getMessage());
+        }
     }
 
     /**
      * The user leaves the team.
      */
     public function leave_user($user_id) {
-        $user = User::find($user_id);
-        $user->team_id = null;
-        $user->save();
-        return redirect()->route('team.index')->with('status', 'done');
+        try {
+            $user = User::findOrFail($user_id);
+            $team = Team::find($user->team_id);
+            $this->authorize('leave', [$team, $user]);
+            $user->team_id = null;
+            $user->save();
+            return redirect()->route('team.index')->with('status', 'done');
+        } catch (Exception $e) {
+            return redirect()->route('team.index')->with('error', $e->getMessage());
+        }
     }
 
     /**
      * The user join the team.
      */
     public function join_user(Team $team, User $user) {
-        $user->team_id = $team->id;
-        $user->save();
-        return redirect()->route('team.index')->with('status', 'done');
+        try {
+            $this->authorize('join', [$team, $user]);
+            $user->team_id = $team->id;
+            $user->save();
+            return redirect()->route('team.index')->with('status', 'done');
+        } catch (Exception $e) {
+            return redirect()->route('team.index')->with('error', $e->getMessage());
+        }
     }
 }

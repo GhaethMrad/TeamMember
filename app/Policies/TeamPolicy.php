@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Support\Facades\Auth;
 
 class TeamPolicy
 {
@@ -62,5 +63,17 @@ class TeamPolicy
     public function forceDelete(User $user, Team $team): bool
     {
         return false;
+    }
+
+    public function join(User $authUser, Team $team, User $targetUser): bool
+    {
+        // allow users to join themselves or allow admins to add users
+        return $authUser->id == $targetUser->id;
+    }
+
+    public function leave(User $authUser, Team $team, User $targetUser): bool
+    {
+        // allow users to leave themselves or allow admins to remove users
+        return $authUser->id == $targetUser->id;
     }
 }

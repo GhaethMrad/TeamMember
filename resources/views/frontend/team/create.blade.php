@@ -46,4 +46,14 @@
             <input class="bg-indigo-500 text-[#222] p-3 cursor-pointer mb-5" type="submit" value="CREATE">
         </form>
     </div>
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                title: 'Error',
+                text: '{{ session('error') }}',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        </script>
+    @endif
 @endsection
