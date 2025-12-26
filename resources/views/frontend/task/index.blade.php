@@ -5,6 +5,9 @@
 @section('content')
     <div class="container">
         <h1 class="w-fit mx-auto my-[50px] text-[#222] text-[50px] uppercase border-b-2 border-indigo-400">Tasks</h1>
+        @can ('create', App\Models\Task::class)
+            <a href="{{ route('task.create') }}" class="block w-fit mx-auto mb-[20px] px-[25px] py-[10px] bg-[#222] text-indigo-400 border-2 border-indigo-400 text-[20px] uppercase">Create</a>
+        @endcan
         <div>
             <form class="search w-full" action="POST">
                 @csrf
@@ -17,11 +20,30 @@
             </form>
             <div class="flex flex-col items-center mt-[20px]">
                 @if (count($tasks) > 0)
-                    
+                    @foreach ($tasks as $task)
+                        <div class="w-full mb-[20px] p-[20px] border-2 border-indigo-400 rounded-lg">
+                            <h2 class="text-[24px] font-bold mb-[10px]">{{ $task->title }}</h2>
+                            <p class="mb-[10px]">{{ $task->description }}</p>
+                            <p class="mb-[10px]">Priority: {{ ucfirst($task->priority) }}</p>
+                            <p class="mb-[10px]">Status: {{ ucfirst(str_replace('_', ' ', $task->status)) }}</p>
+                            <p class="mb-[10px]">Assigned to: {{ $task->user->name }}</p>
+                            <p class="mb-[10px]">Team: {{ $task->team->name }}</p>
+                        </div>
+                    @endforeach
                     @else
                     <p class="text-[18px]">Not Tasks Found!</p>
                 @endif
             </div>
         </div>
     </div>
+     @if (session('status') == 'done')
+    <script>
+        Swal.fire({
+            title: 'Successfully',
+            text: 'The operation was completed successfully',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    </script>
+@endif
 @endsection

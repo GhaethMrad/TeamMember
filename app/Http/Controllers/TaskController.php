@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Task\TaskStoreRequest;
 use App\Models\Task;
+use App\Models\Team;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +20,8 @@ class TaskController extends Controller
     public function index()
     {
         $this->authorize('viewAny', Task::class);
-        return view('frontend.task.index', ['tasks' => Auth::user()->tasks()]);
+        $tasks = Auth::user()->isAdmin() ? Task::all() : Auth::user()->tasks()->get();
+        return view('frontend.task.index', ['tasks' => $tasks]);
     }
 
     /**
@@ -26,15 +30,29 @@ class TaskController extends Controller
     public function create()
     {
         $this->authorize('create', Task::class);
-        return view('frontend.task.create', ['users' => User::whereNotNull('team_id')->get()]);
+        return view('frontend.task.create', ['users' => User::whereNotNull('team_id')->get(), 'teams' => Team::all()]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(TaskStoreRequest $request)
     {
-        //
+        try {
+            $this->authorize('create', Task::class);
+
+            Task::create([
+                'title' => $request->title,
+                'description' => $request->description,
+                'priority' => $request->priority,
+                'status' => 'pending',
+                'user_id' => $request->user_id,
+                'team_id' => User::find($request->user_id)->team_id,
+            ]);
+            return redirect()->route('task.index')->with('status', 'done');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'An error occurred while creating the task.');
+        }
     }
 
     /**
