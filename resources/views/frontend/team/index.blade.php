@@ -4,59 +4,65 @@
 
 @section('content')
     <div class="container">
-        <h1 class="w-fit mx-auto my-[50px] text-[#222] text-[50px] uppercase border-b-2 border-indigo-400">Teams</h1>
+        <h1 class="text-3xl font-semibold text-slate-900 text-center my-8">Teams</h1>
         @can ('create', App\Models\Team::class)
-            <a href="{{ route('team.create') }}" class="block w-fit mx-auto mb-[20px] px-[25px] py-[10px] bg-[#222] text-indigo-400 border-2 border-indigo-400 text-[20px] uppercase">Create</a>
+            <div class="text-center mb-6">
+                <a href="{{ route('team.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md shadow-sm hover:bg-indigo-700">Create Team</a>
+            </div>
         @endcan
-        <div class="overflow-x-auto">
-            <table class="w-full">
-                <thead>
-                    <th class="bg-[#222] text-white border-[1px] p-[8px] border-indigo-400">Id</th>
-                    <th class="bg-[#222] text-white border-[1px] p-[8px] border-indigo-400">Name</th>
-                    <th class="bg-[#222] text-white border-[1px] p-[8px] border-indigo-400">Description</th>
-                    <th class="bg-[#222] text-white border-[1px] p-[8px] border-indigo-400">Actions</th>
+
+        <div class="overflow-x-auto bg-white rounded-lg shadow-sm">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Id</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
                 </thead>
-                <tbody>
+                <tbody class="bg-white divide-y divide-gray-100">
                     @if (count($teams) == 0)
-                        <td colspan="4" class="text-center bg-[#333] p-[8px] text-[20px] text-white">Teams Not Found</td>
-                        @else
-                        @foreach ($teams as $team)
                         <tr>
-                            <td class="text-center bg-[#333] p-[8px] text-[20px] text-white border-2 border-gray-300">{{ $team->id }}</td>
-                            <td class="text-center bg-[#333] p-[8px] text-[20px] text-white border-2 border-gray-300">{{ $team->name }}</td>
-                            <td class="text-center bg-[#333] p-[8px] text-[20px] text-white border-2 border-gray-300">{{ $team->description }}</td>
-                            <td class="text-center bg-[#333] p-[8px] text-[20px] text-white border-2 border-gray-300">
-                                <div class="flex items-center gap-1">
-                                    <a href="{{ route('team.show', $team->id) }}" class="border-b-2 border-indigo-400 text-indigo-400">Show</a>
-                                    @can ('update', $team)                                        
-                                        <a href="{{ route('team.edit', $team->id) }}" class="border-b-2 border-blue-500 text-blue-500">Edit</a>
+                            <td colspan="4" class="px-6 py-8 text-center text-sm text-gray-500">No teams found.</td>
+                        </tr>
+                    @else
+                        @foreach ($teams as $team)
+                        <tr class="hover:bg-slate-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $team->id }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">{{ $team->name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $team->description }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                <div class="flex items-center gap-3">
+                                    <a href="{{ route('team.show', $team->id) }}" class="text-indigo-600 hover:text-indigo-800">Show</a>
+                                    @can ('update', $team)
+                                        <a href="{{ route('team.edit', $team->id) }}" class="text-blue-600 hover:text-blue-800">Edit</a>
                                     @endcan
-                                        @can('delete', $team)
-                                        <form action="{{ route('team.destroy', $team->id) }}" method="POST">
+                                    @can('delete', $team)
+                                        <form action="{{ route('team.destroy', $team->id) }}" method="POST" class="inline">
                                             @csrf
                                             @method('DELETE')
-                                            <input class="border-b-2 border-red-500 text-red-500 cursor-pointer" type="submit" value="Delete">
+                                            <button type="submit" class="text-red-600 hover:text-red-800">Delete</button>
+                                        </form>
+                                    @endcan
+
+                                    @if (!Auth::user()->team_id && !Auth::user()->is_admin)
+                                        @can('join', [$team, Auth::user()])
+                                        <form action="{{ route('team.join_user', ['team' => $team->id, 'user' => Auth::user()->id]) }}" method="POST" class="inline">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" class="text-green-600 hover:text-green-800">Join</button>
                                         </form>
                                         @endcan
-
-                                        @if (!Auth::user()->team_id && !Auth::user()->is_admin)
-                                            @can('join', [$team, Auth::user()])
-                                            <form action="{{ route('team.join_user', ['team' => $team->id, 'user' => Auth::user()->id]) }}" method="POST">
-                                                @csrf
-                                                @method('PUT')
-                                                <input class="text-green-400" type="submit" value="Join">
-                                            </form>
-                                            @endcan
-                                        @elseIf (Auth::user()->team_id == $team->id && !Auth::user()->is_admin)
-                                            @can('leave', [$team, Auth::user()])
-                                            <form action="{{ route('team.leave_user', Auth::user()->id) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <input class="text-red-400 underline cursor-pointer" type="submit" value="Leave">
-                                            </form>
-                                            @endcan
-                                        @endif
-
+                                    @elseIf (Auth::user()->team_id == $team->id && !Auth::user()->is_admin)
+                                        @can('leave', [$team, Auth::user()])
+                                        <form action="{{ route('team.leave_user', Auth::user()->id) }}" method="POST" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-600 hover:text-red-800 underline">Leave</button>
+                                        </form>
+                                        @endcan
+                                    @endif
                                 </div>
                             </td>
                         </tr>

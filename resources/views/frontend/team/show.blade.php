@@ -4,30 +4,32 @@
 
 @section('content')
     <div class="container">
-        <a class="block mt-[20px] text-indigo-400" href="{{ route('team.index') }}">
+        <a class="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-800 mt-4" href="{{ route('team.index') }}">
             <i class="fa-solid fa-arrow-left"></i>
             Home
         </a>
-        <h1 class="w-fit mx-auto my-[50px] text-[#222] text-[50px] uppercase border-b-2 border-indigo-400 text-center">({{ $team->name }}) Teams Details</h1>
-        <div class="overflow-x-auto">
-            <table class="w-full">
-                <thead>
-                    <th class="bg-[#222] text-white border-[1px] p-[8px] border-indigo-400">Team Id</th>
-                    <th class="bg-[#222] text-white border-[1px] p-[8px] border-indigo-400">User Id</th>
-                    <th class="bg-[#222] text-white border-[1px] p-[8px] border-indigo-400">Username</th>
-                    <th class="bg-[#222] text-white border-[1px] p-[8px] border-indigo-400">Email</th>
-                </thead>
-                <tbody>
+
+        <header class="mt-6 mb-6 text-center">
+            <h1 class="text-2xl font-semibold text-slate-900">{{ $team->name }} — Team Details</h1>
+            <p class="text-sm text-gray-500">Team ID: {{ $team->id }}</p>
+        </header>
+
+        <div class="bg-white rounded-lg shadow-sm p-6">
+            <h2 class="text-lg font-medium text-slate-800 mb-4">Members</h2>
+
+            <div class="flow-root">
+                <ul class="divide-y divide-gray-100">
                     @foreach ($team->users as $user)
-                    <tr>
-                        <td class="text-center bg-[#333] p-[8px] text-[20px] text-white border-2 border-gray-300">{{ $team->id }}</td>
-                        <td class="text-center bg-[#333] p-[8px] text-[20px] text-white border-2 border-gray-300">{{ $user->id }}</td>
-                        <td class="text-center bg-[#333] p-[8px] text-[20px] text-white border-2 border-gray-300">{{ $user->name }}</td>
-                        <td class="text-center bg-[#333] p-[8px] text-[20px] text-white border-2 border-gray-300">{{ $user->email }}</td>
-                    </tr>
+                    <li class="py-4 flex items-center justify-between">
+                        <div>
+                            <div class="text-sm font-medium text-slate-900">{{ $user->name }}</div>
+                            <div class="text-sm text-gray-500">{{ $user->email }}</div>
+                        </div>
+                        <div class="text-sm text-gray-500">ID: {{ $user->id }}</div>
+                    </li>
                     @endforeach
-                </tbody>
-            </table>
+                </ul>
+            </div>
         </div>
     </div>
 @endsection

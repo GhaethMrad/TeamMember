@@ -4,50 +4,60 @@
 
 @section('content')
     <div class="container">
-        <a class="block mt-[20px] text-indigo-400" href="{{ route('task.index') }}">
+        <a class="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-800 mt-4" href="{{ route('task.index') }}">
             <i class="fa-solid fa-arrow-left"></i>
             Home
         </a>
-        <h1 class="w-fit mx-auto my-[50px] text-[#222] text-[50px] uppercase border-b-2 border-indigo-400">Create Task</h1>
-        @if ($errors->any())
-            <div class="bg-red-400 p-5 my-5">
-                <ul class="list-disc flex flex-col gap-2">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-        <form action="{{ route('task.store') }}" method="POST">
-            @csrf
-            <div class="mb-4">
-                <label for="title" class="block text-gray-700 text-sm font-bold mb-2">Title:</label>
-                <input type="text" id="title" name="title" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ old('title') }}" required>
-            </div>
-            <div class="mb-4">
-                <label for="description" class="block text-gray-700 text-sm font-bold mb-2">Description:</label>
-                <textarea id="description" name="description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>{{ old('description') }}</textarea>
-            </div>
-            <div class="mb-4">
-                <label for="priority" class="block text-gray-700 text-sm font-bold mb-2">Priority:</label>
-                <select name="priority" id="priority" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
-                </select>
-            </div>
-            <div class="mb-4">
-                <label for="" class="block text-gray-700 text-sm font-bold mb-2">Users:</label>
-                <select name="user_id" id="user_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    @foreach ($users as $user)
-                        <option value="{{ $user->id }}">{{ $user->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="flex items-center justify-between">
-                <button type="submit" class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Create Task</button>
-            </div>
-        </form>
+
+        <div class="max-w-2xl mx-auto mt-6">
+            <h1 class="text-2xl font-semibold text-slate-900 mb-4">Create Task</h1>
+
+            @if ($errors->any())
+                <div class="rounded-md bg-red-50 border border-red-100 p-4 mb-4">
+                    <ul class="list-disc pl-5 space-y-1 text-sm text-red-700">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form action="{{ route('task.store') }}" method="POST" class="bg-white p-6 rounded-lg shadow-sm space-y-4">
+                @csrf
+
+                <div>
+                    <label for="title" class="block text-sm font-medium text-slate-700">Title</label>
+                    <input type="text" id="title" name="title" class="mt-1 block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-slate-800" value="{{ old('title') }}" required>
+                </div>
+
+                <div>
+                    <label for="description" class="block text-sm font-medium text-slate-700">Description</label>
+                    <textarea id="description" name="description" class="mt-1 block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-slate-800" required>{{ old('description') }}</textarea>
+                </div>
+
+                <div>
+                    <label for="priority" class="block text-sm font-medium text-slate-700">Priority</label>
+                    <select name="priority" id="priority" class="mt-1 block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-slate-800">
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="user_id" class="block text-sm font-medium text-slate-700">Assign To</label>
+                    <select name="user_id" id="user_id" class="mt-1 block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-slate-800">
+                        @foreach ($users as $user)
+                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md shadow-sm hover:bg-indigo-700">Create Task</button>
+                </div>
+            </form>
+        </div>
     </div>
     @if (session('error'))
         <script>

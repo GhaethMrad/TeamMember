@@ -20,6 +20,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/team/user/{id}/leave', [TeamController::class, 'leave_user'])->name('team.leave_user');
     Route::resource('task', TaskController::class);
     Route::put('/task/{task}/status', [TaskController::class, 'changeStatus'])->name('task.change_status');
+    Route::post('/task/{task}/attachment', [TaskController::class, 'uploadAttachment'])->name('task.uploadAttachments');
 });
 
 require __DIR__.'/auth.php';
