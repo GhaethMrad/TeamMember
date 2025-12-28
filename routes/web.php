@@ -22,6 +22,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('task', TaskController::class);
     Route::put('/task/{task}/status', [TaskController::class, 'changeStatus'])->name('task.change_status');
     Route::post('/task/{task}/attachment', [TaskController::class, 'uploadAttachment'])->name('task.uploadAttachments');
+    Route::get('/task-search', [TaskController::class, 'search'])->name('task.search');
 });
 
 require __DIR__.'/auth.php';

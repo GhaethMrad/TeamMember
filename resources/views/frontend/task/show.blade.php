@@ -57,6 +57,9 @@
                 </div>
             </form>
             @endcan
+            @can ('update', $task)
+                <a href="{{ route('task.edit', $task->id) }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md shadow-sm hover:bg-indigo-700">Edit Task</a>
+            @endcan
         </div>
     </div>
     @if (session('status') == 'done')

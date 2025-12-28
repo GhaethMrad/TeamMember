@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Task\AttachmentStoreRequest;
 use App\Http\Requests\Task\TaskStoreRequest;
+use App\Http\Requests\TaskUpdateRequest;
 use App\Models\Task;
 use App\Models\Team;
 use App\Models\User;
@@ -70,15 +71,28 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        //
+        return view('frontend.task.edit', ['task' => $task, 'users' => User::whereNotNull('team_id')->get()]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Task $task)
+    public function update(TaskUpdateRequest $request, Task $task)
     {
-        //
+        try {
+            $this->authorize('update', $task);
+
+            $task->update([
+                'title' => $request->title,
+                'description' => $request->description,
+                'priority' => $request->priority,
+                'user_id' => $request->user_id,
+                'team_id' => User::find($request->user_id)->team_id,
+            ]);
+            return redirect()->route('task.show', $task->id)->with('status', 'done');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'An error occurred while updating the task.');
+        }
     }
 
     /**
@@ -122,5 +136,12 @@ class TaskController extends Controller
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
+    }
+
+    public function search(Request $request)
+    {
+        $this->authorize('search', Task::class);
+        $tasks = Task::where('title', 'like', "%{$request->search}%")->get();
+        return view('frontend.task.index', ['tasks' => $tasks]);
     }
 }

@@ -12,10 +12,10 @@
         </div>
 
         @if (Auth::user()->is_admin)
-        <form class="mb-6" method="POST">
+        <form class="mb-6" action="{{ route('task.search') }}" method="GET">
             @csrf
             <div class="max-w-xl relative">
-                <input class="w-full border border-gray-200 rounded-lg py-2 pl-4 pr-12 text-sm" type="search" name="search" placeholder="Search tasks">
+                <input class="w-full border border-gray-200 rounded-lg py-2 pl-4 pr-12 text-sm" type="search" name="search" placeholder="Search tasks" value="{{ request('search') }}">
                 <button class="absolute right-1 top-1/2 -translate-y-1/2 bg-indigo-500 text-white px-3 py-1.5 rounded-md hover:bg-indigo-600" type="submit">
                     <i class="fa-solid fa-search"></i>
                 </button>

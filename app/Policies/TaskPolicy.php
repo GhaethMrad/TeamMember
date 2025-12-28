@@ -73,4 +73,9 @@ class TaskPolicy
     {
         return $user->id == $task->user_id;
     }
+
+    public function search(User $user): bool
+    {
+        return $user->isAdmin();
+    }
 }
