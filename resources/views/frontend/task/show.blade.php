@@ -60,6 +60,17 @@
             @can ('update', $task)
                 <a href="{{ route('task.edit', $task->id) }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md shadow-sm hover:bg-indigo-700">Edit Task</a>
             @endcan
+                @if (Auth::user()->id == $task->user_id)
+                    <a href="{{ route('comment.create', ['task_id' => $task->id]) }}" class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-md shadow-sm hover:bg-emerald-700">Add Comment</a>
+                @endif
+                <a href="{{ route('comment.index', ['task_id' => $task->id]) }}" class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-md mt-2 shadow-sm hover:bg-emerald-700">Comments</a>
+            @can ('delete', $task)
+                <form action="{{ route('task.destroy', $task->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this task?');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-md shadow-sm hover:bg-red-700">Delete Task</button>
+                </form>
+            @endcan
         </div>
     </div>
     @if (session('status') == 'done')

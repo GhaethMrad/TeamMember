@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Task\AttachmentStoreRequest;
 use App\Http\Requests\Task\TaskStoreRequest;
-use App\Http\Requests\TaskUpdateRequest;
+use App\Http\Requests\Task\TaskUpdateRequest;
 use App\Models\Task;
 use App\Models\Team;
 use App\Models\User;
@@ -100,7 +100,14 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        try {
+            $this->authorize('delete', $task);
+
+            $task->delete();
+            return redirect()->route('task.index')->with('status', 'done');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'An error occurred while deleting the task.');
+        }
     }
 
     public function changeStatus(Request $request, Task $task)

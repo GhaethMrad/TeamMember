@@ -42,6 +42,7 @@
                                 <svg class="h-5 w-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                             </div>
                         </div>
+                        <a href="{{ route('comment.index', ['task_id' => $task->id]) }}" class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-md shadow-sm hover:bg-emerald-700">Comments</a>
                     </a>
                 @endforeach
             @else
