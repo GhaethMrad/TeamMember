@@ -57,12 +57,14 @@ Follow the steps below to run the **TeamMember** project locally:
 ```bash
 git clone https://github.com/GhaethMrad/TeamMember.git
 cd TeamMember
+```
 ### Step 2: Install PHP Dependencies:
 ```bash
 composer install
 ### Step 3: Create Environment File:
 ```bash
 cp .env.example .env
+```
 ### Step 4: Configure the Environment:
 ```bash
 DB_CONNECTION=mysql
@@ -71,18 +73,24 @@ DB_PORT=3306
 DB_DATABASE=your_database_name
 DB_USERNAME=your_database_username
 DB_PASSWORD=your_database_password
+```
 ### Step 5: Generate Application Key
 ```bash
 php artisan key:generate
+```
 ### Step 6: Run Database Migrations
 ```bash
 php artisan migrate
+```
 ### Step 7: Run Database Seeder (Optional)
 ```bash
 php artisan db:seed
+```
 ### Step 8: Start the Development Server And Vite
 ```bash
 composer run dev
+```
 ### Step 9: Access the Application
 ```bash
 http://127.0.0.1:8000
+
