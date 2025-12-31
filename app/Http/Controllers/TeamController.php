@@ -119,6 +119,9 @@ class TeamController extends Controller
             $team = Team::find($user->team_id);
             $this->authorize('leave', [$team, $user]);
             $user->team_id = null;
+            foreach ($user->tasks as $task) {
+                $task->delete();
+            }
             $user->save();
             return redirect()->route('team.index')->with('status', 'done');
         } catch (Exception $e) {
