@@ -61,6 +61,7 @@ cd TeamMember
 ### Step 2: Install PHP Dependencies:
 ```bash
 composer install
+```
 ### Step 3: Create Environment File:
 ```bash
 cp .env.example .env
