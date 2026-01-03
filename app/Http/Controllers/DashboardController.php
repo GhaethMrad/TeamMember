@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Team;
 use App\Models\Task;
 use App\Models\Attachment;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -16,11 +17,20 @@ class DashboardController extends Controller
         $teamsCount = Team::count();
         $tasksCount = Task::count();
         $attachmentsCount = Attachment::count();
-        $tasksByStatus = [
-            'pending' => Task::where('status', 'pending')->count(),
-            'in_progress' => Task::where('status', 'in_progress')->count(),
-            'completed' => Task::where('status', 'completed')->count(),
-        ];
+        if (Auth::user()->isAdmin()) {
+            $tasksByStatus = [
+                'pending' => Task::where('status', 'pending')->count(),
+                'in_progress' => Task::where('status', 'in_progress')->count(),
+                'completed' => Task::where('status', 'completed')->count(),
+            ];
+        } else {
+            $tasksByStatus = [
+                'pending' => Task::where('status', 'pending')->where('user_id', Auth::id())->count(),
+                'in_progress' => Task::where('status', 'in_progress')->where('user_id', Auth::id())->count(),
+                'completed' => Task::where('status', 'completed')->where('user_id', Auth::id())->count(),
+            ];
+
+        }
 
         $recentUsers = User::orderBy('created_at', 'desc')->limit(5)->get(['id', 'name', 'email', 'created_at']);
 

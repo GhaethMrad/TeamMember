@@ -47,8 +47,8 @@
             </div>
             @endcan
 
-            @can('uploadAttachment', $task)
-            <form action="{{ route('task.uploadAttachments', $task) }}" method="POST" enctype="multipart/form-data" class="mb-2">
+            @can('uploadAttachment', [App\Models\Attachment::class, $task])
+            <form action="{{ route('attachment.upload', $task) }}" method="POST" enctype="multipart/form-data" class="mb-2">
                 @csrf
                 <label class="block text-sm font-medium text-slate-700 mb-2">Upload Attachment</label>
                 <input type="file" name="attachments[]" multiple class="block w-full text-sm text-gray-600 file:bg-white file:border file:border-gray-200 file:rounded-md file:px-3 file:py-2">

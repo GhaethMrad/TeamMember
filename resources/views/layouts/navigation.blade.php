@@ -21,6 +21,11 @@
                     <x-nav-link :href="route('task.index')" :active="request()->routeIs('task.index')">
                         {{ __('Tasks') }}
                     </x-nav-link>
+                    @if (Auth::user()->is_admin)
+                        <x-nav-link :href="route('attahment.index')" :active="request()->routeIs('attahment.index')">
+                        {{ __('Attahments') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -82,6 +87,11 @@
             <x-responsive-nav-link :href="route('task.index')" :active="request()->routeIs('task.index')">
                 {{ __('Tasks') }}
             </x-responsive-nav-link>
+            @if (Auth::user()->is_admin)
+                <x-responsive-nav-link :href="route('attachment.index')" :active="request()->routeIs('attachment.index')">
+                {{ __('Attachments') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->

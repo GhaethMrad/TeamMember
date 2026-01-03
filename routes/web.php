@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
@@ -25,9 +26,10 @@ Route::middleware('auth')->group(function () {
     // Task Routes
     Route::resource('task', TaskController::class);
     Route::put('/task/{task}/status', [TaskController::class, 'changeStatus'])->name('task.change_status');
-    Route::post('/task/{task}/attachment', [TaskController::class, 'uploadAttachment'])->name('task.uploadAttachments');
     Route::get('/task-search', [TaskController::class, 'search'])->name('task.search');
     Route::resource('comment', CommentController::class)->except(['show']);
+    // Attachment Routes
+    Route::post('/task/{task}/attachment', [AttachmentController::class, 'upload'])->name('attachment.upload');
 });
 
 require __DIR__.'/auth.php';
