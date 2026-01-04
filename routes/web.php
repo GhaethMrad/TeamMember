@@ -29,6 +29,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/task-search', [TaskController::class, 'search'])->name('task.search');
     Route::resource('comment', CommentController::class)->except(['show']);
     // Attachment Routes
+    Route::get('/attachments', [AttachmentController::class, 'index'])->name('attachment.index');
+    Route::get('/attachments/{id}', [AttachmentController::class, 'show'])->name('attachment.show');
+    Route::delete('/attachments/{attachment}', [AttachmentController::class, 'destroy'])->name('attachment.destroy');
     Route::post('/task/{task}/attachment', [AttachmentController::class, 'upload'])->name('attachment.upload');
 });
 

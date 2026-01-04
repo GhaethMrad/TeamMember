@@ -30,6 +30,31 @@
                 <div>Status: <span class="text-slate-800 font-medium">{{ ucfirst(str_replace('_', ' ', $task->status)) }}</span></div>
                 <div>Task ID: <span class="text-slate-800">{{ $task->id }}</span></div>
             </div>
+            @if($task->attachments->count())
+            <div class="mt-6">
+                <h2 class="text-lg font-medium text-slate-800 mb-3">Attachments</h2>
+                <div class="space-y-2">
+                    @foreach($task->attachments as $attachment)
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+                            <div>
+                                <a href="{{ asset('storage/' . $attachment->file_path) }}" target="_blank" class="text-indigo-600 hover:underline">{{ basename($attachment->file_path) }}</a>
+                                <div class="text-sm text-gray-500">{{ $attachment->file_type }}</div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <a href="{{ route('attachment.show', $attachment->id) }}" class="inline-flex items-center px-3 py-2 bg-white border rounded-md">View</a>
+                                @can('delete', \App\Models\Attachment::class)
+                                    <form action="{{ route('attachment.destroy', $attachment->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this attachment?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="inline-flex items-center px-3 py-2 bg-red-600 text-white rounded-md">Delete</button>
+                                    </form>
+                                @endcan
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
 
             @can('changeStatus', $task)
             <div class="mb-4">

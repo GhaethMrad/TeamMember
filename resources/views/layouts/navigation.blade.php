@@ -22,7 +22,7 @@
                         {{ __('Tasks') }}
                     </x-nav-link>
                     @if (Auth::user()->is_admin)
-                        <x-nav-link :href="route('attahment.index')" :active="request()->routeIs('attahment.index')">
+                        <x-nav-link :href="route('attachment.index')" :active="request()->routeIs('attachment.index')">
                         {{ __('Attahments') }}
                         </x-nav-link>
                     @endif
